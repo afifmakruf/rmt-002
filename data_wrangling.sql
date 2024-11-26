@@ -5,7 +5,7 @@ FROM crunchbase_companies_clean_data;
 
 SELECT founded_at, founded_at_clean								-- ambil data pada kolom founded_at dan founded_at_clean
 FROM crunchbase_companies_clean_data							-- dari tabel crunchbase_companies_clean_data
-ORDER BY founded_at;												-- diurutkan berdasarkan founded_at
+ORDER BY founded_at;											-- diurutkan berdasarkan founded_at
 
 ALTER TABLE crunchbase_companies_clean_data						-- alter table crunchbase_companies_clean_data
 ALTER COLUMN founded_at TYPE DATE USING founded_at::date;		-- alter kolom founded_at tipe datanya menjadi date
