@@ -23,7 +23,7 @@ SELECT founded_at,												-- ambil data pada kolom founded_at
        EXTRACT(MONTH FROM founded_at) AS month,					-- ekstrak month dari kolom founded_at dan hasilnya dijadikan sebagai data pada kolom kolom month
        EXTRACT(DAY FROM founded_at) AS day,						-- ekstrak day dari kolom founded_at dan hasilnya dijadikan sebagai data pada kolom kolom day
        EXTRACT(QUARTER FROM founded_at) AS quarter				-- ekstrak quarter dari kolom founded_at dan hasilnya dijadikan sebagai data pada kolom kolom quarter
-FROM crunchbase_companies_clean_data;							-- ambil data dari tabel crunchbase_companies_clean_data
+FROM crunchbase_companies_clean_data;							-- data diambil dari tabel crunchbase_companies_clean_data
 
 SELECT CURRENT_DATE AS date,									-- tampilkan tanggal saat ini sebagai data di kolom date
        CURRENT_TIME AS time,									-- tampilkan waktu saat ini sebagai data di kolom time
@@ -34,8 +34,8 @@ SELECT CURRENT_DATE AS date,									-- tampilkan tanggal saat ini sebagai data 
 
 SELECT founded_at,												-- ambil data dari kolom founded_at
        CURRENT_DATE AS local_time,								-- definisi/deklarasikan tanggal saat ini sebagai local_time
-       CURRENT_DATE - founded_at AS founded_time_ago,			-- tanggal saat ini dikurangi data tanggal pada kolom founded_at dan hasilnya dijadikan sebagai data pada kolom founded_time_ago
-       founded_at + INTERVAL '10 DAY' AS plus_10_days			-- data pada kolom founded at ditambahkan dengan 10 hari dan hasilnya dijadikan sebagai data pada kolom plus_10_days
+       CURRENT_DATE - founded_at AS founded_day_ago,			-- tanggal saat ini dikurangi data tanggal pada kolom founded_at dan hasilnya dijadikan sebagai data pada kolom founded_time_ago
+       founded_at + INTERVAL '10 DAYS' AS plus_10_days			-- data pada kolom founded at ditambahkan dengan 10 hari dan hasilnya dijadikan sebagai data pada kolom plus_10_days
 FROM crunchbase_companies_clean_data;							-- data diambil dari tabel crunchbase_companies_clean_data
 
 SELECT founded_at, COALESCE(founded_at, 'No Date')
@@ -44,38 +44,44 @@ FROM crunchbase_companies_clean_data;
 SELECT start_time,												-- ambil data dari kolom start_time
     LEFT(start_time::TEXT, 10) AS selected_date,				-- ambil text dengan hitungan 10 karakter dari kiri dan hasilnya dijadikan sebagai data pada kolom selected_date
     RIGHT(start_time::TEXT, 8) AS selected_time,				-- ambil text dengan hitungan 8 karakter dari kanan dan hasilnya dijadikan sebagai data pada kolom selected_time 
-    SUBSTRING(start_time::TEXT FROM 15 FOR 2) AS selected_minute
-FROM dc_bikeshare_q1_2012;
+    SUBSTRING(start_time::TEXT FROM 15 FOR 2) AS selected_minute -- ambil text di tengah, mulai dari karakter ke-15, ambil 2 karakter ke kanan, dan hasilnya dijadikan sebagai data pada kolom selected_minute
+FROM dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
 
-SELECT start_time,
-       RIGHT(start_time::TEXT, LENGTH(start_time::TEXT) - 11) AS selected_time
-FROM dc_bikeshare_q1_2012;
+SELECT start_time,                                              -- ambil data dari kolom start_time
+    RIGHT(start_time::TEXT, LENGTH(start_time::TEXT) - 11) AS selected_time -- ambil seluruh text dari kanan, ambil panjang karakternya dikurangi 11, dan hasilnya dijadikan sebagai data pada kolom selected_time
+FROM dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
 
-SELECT bike_number,
-       TRIM(leading 'W0' FROM bike_number) AS trimmed
-from dc_bikeshare_q1_2012;
+-- untuk cek panjang karakter pada kolom start_time
+SELECT start_time,                                              -- ambil data dari kolom start_time
+    LENGTH(start_time::TEXT) len 					 			-- ambil seluruh text dari kanan, ambil panjang karakternya dan hasilnya dijadikan sebagai data pada kolom len
+FROM dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
 
-SELECT bike_number,
-       POSITION('1' in bike_number) as pos
-FROM dc_bikeshare_q1_2012;
+SELECT bike_number,                                             -- ambil data dari kolom bike_number
+    TRIM(leading 'W0' FROM bike_number) AS trimmed              -- potong atau hilangkan karakter leading(di awal) dengan ketentuan 'W0' adalah awal dari kolom bike_numer, dan sisanya dijadikan data pada kolom trimmed
+from dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
 
-SELECT start_station,
-    LOWER(start_station) AS lowered,
-    UPPER(start_station) AS uppered
-FROM dc_bikeshare_q1_2012;
+SELECT bike_number,                                    		    -- ambil data dari kolom bike_number
+    POSITION('1' in bike_number) as pos           			    -- ada pada karakter posisi ke-berapa string '1' pada tiap baris di kolom bike_number (ambil posisi paling awal), hasilnya dijadikan data pada kolom pos
+from dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
 
-SELECT start_station,
-       start_terminal,
-       start_terminal || ' - ' || start_station AS station_id_name
-FROM dc_bikeshare_q1_2012;
+SELECT start_station,                                           -- ambil data dari kolom start_station
+    LOWER(start_station) AS lowered,                            -- jadikan data pada kolom start_station menjadi kecil besar semua, dan hasilnya dijadikan data pada kolom lowered
+    UPPER(start_station) AS uppered                             -- jadikan data pada kolom start_station menjadi huruf besar semua, dan hasilnya dijadikan data pada kolom uppered
+FROM dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
+
+SELECT start_station,                                           -- ambil data dari kolom start_station
+       start_terminal,                                          -- ambil data dari kolom start_terminal
+       CONCAT(start_terminal, '-', start_station) AS station_id_name -- jadikan data pada kolom start_terminal data di awal, kemudian tambahkan penghubung '-', dan data pada kolom start_station dijadikan kata akhir, hasilnya dijadikan data pada kolom station_id_name
+       start_terminal || ' - ' || start_station AS station_id_name1  -- sama dengan perintah di atas (ini adalah CONCAT dengan query yang lebih sederhana)
+FROM dc_bikeshare_q1_2012;                                      -- data diambil dari tabel dc_bikeshare_q1_2012
 
 SELECT name, category_code, funding_total_usd,  				-- ambil nama, category_code, funding_total_usd
-    CASE															-- dengan kasus
+    CASE														-- dengan kasus
         WHEN funding_total_usd > 1000000 THEN 'High Funding'	-- ketika funding_total_usd lebih dari 1.000.000, maka catat sebagai 'High Funding'
         WHEN funding_total_usd > 100000 THEN 'Medium Funding'	-- ketika funding_total_usd kurang dari 1.000.000 dan lebih dari 100.000, maka catat sebagai 'Medium Funding'
         ELSE 'Low Funding'										-- ketika tidak masuk dalam 2 kasus di atas, maka catat sebagai 'Low Funding'
     END AS funding_category										-- menutup kasus -> jadikan sebagai kolom funding_category
-FROM crunchbase_companies_clean_data;							-- ambil data dari tabel crunchbase_companies_clean_data
+FROM crunchbase_companies_clean_data;							-- data diambil dari tabel crunchbase_companies_clean_data
 
 SELECT subquery.start_station,
        subquery.trip_count
